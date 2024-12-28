@@ -1,8 +1,8 @@
 from django.db import models
 
-from lending.administrator.models import Administrator
-from lending.credit_product.models import CreditProduct
-from lending.legal_user.models import LegalUser
+from administrator.models import Administrator
+from credit_product.models import CreditProduct
+from legal_user.models import LegalUser
 
 
 class Request(models.Model):

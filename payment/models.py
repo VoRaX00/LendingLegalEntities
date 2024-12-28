@@ -1,7 +1,6 @@
 from django.db import models
 
-from lending.legal_user.models import LegalUser
-
+from legal_user.models import LegalUser
 
 class Payment(models.Model):
     id = models.AutoField(primary_key=True)
