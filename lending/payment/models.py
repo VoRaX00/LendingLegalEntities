@@ -9,4 +9,4 @@ class Payment(models.Model):
     recommended_payment = models.IntegerField()
     delay = models.IntegerField(default=0)
     date_payment = models.DateField()
-    date_replenishment = models.DateField()
+    date_replenishment = models.DateField(null=True)
