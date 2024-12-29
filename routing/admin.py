@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Body, Path
 from fastapi.params import Depends
 
 from depends import get_admin_service
@@ -9,10 +9,27 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 
 @router.get(
     "/",
-    responses={404: {"description": "Not found"}},
+    responses={
+        400: {"description": "Bad request"},
+        404: {"description": "Not found"},
+        500: {"description": "Internal Server Error"}
+    },
     response_model=Administrator,
-    description="Получение данных администратора",
+    description="Get admin by email",
 )
-async def get_by_email(email: str, admin_service: AdminService = Depends(get_admin_service)) -> Administrator:
+async def get_by_email(email: str = Path(), admin_service: AdminService = Depends(get_admin_service)) -> Administrator:
     admin = admin_service.get_by_email(email)
+    return admin
+
+@router.post(
+    "/",
+    responses={
+        400: {"description": "Bad request"},
+        500: {"description": "Internal Server Error"}
+    },
+    response_model=Administrator,
+    description="Create admin by email",
+)
+async def create_admin(data = Body(), admin_service: AdminService = Depends(get_admin_service)) -> Administrator:
+    admin = admin_service.get_by_email(data["admin"])
     return admin

@@ -8,9 +8,7 @@ class AdminService:
         self.repository = repository
 
     def create_admin(self, admin) -> Administrator:
-        result = self.repository.create(admin)
-        return result
+        return self.repository.create(admin)
 
     def get_by_email(self, email: str) -> Administrator:
-        result = self.repository.get_by_email(email)
-        return result
+        return self.repository.get_by_email(email)

@@ -4,7 +4,7 @@ from schemas.credit_product import CreditProduct
 
 
 class CreditProductRepo:
-    def create(self, credit_product):
+    def create(self, credit_product) -> CreditProduct:
         pass
 
     def delete(self, id):
