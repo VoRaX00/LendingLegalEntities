@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Body, Path
+from fastapi import APIRouter, Body
 from fastapi.params import Depends
 
 from depends import get_request_service
@@ -25,7 +25,7 @@ async def create_request(data=Body(),
     response_model=Request,
     description="Update a request",
 )
-async def update_request(request_id: int = Path(), data=Body(),
+async def update_request(request_id: int, data=Body(),
                          service: RequestService=Depends(get_request_service)) -> Request:
     req = service.update(request_id, data["req"])
     return req
@@ -36,7 +36,7 @@ async def update_request(request_id: int = Path(), data=Body(),
     response_model=List[Request],
     description="List all requests for user",
 )
-async def get_request(inn: int = Path(),
+async def get_request(inn: int,
                       service: RequestService=Depends(get_request_service)) -> List[Request]:
     req = service.get_by_inn(inn)
     return req

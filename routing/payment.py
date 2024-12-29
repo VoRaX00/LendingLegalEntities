@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Body, Path
+from fastapi import APIRouter, Body
 from fastapi.params import Depends
 
 from depends import get_payment_service
@@ -25,7 +25,7 @@ async def create_payment(data=Body(),
     response_model=Payment,
     description="Update a payment",
 )
-async def update_payment(payment_id: int = Path(), data=Body(),
+async def update_payment(payment_id: int, data=Body(),
                          service: PaymentService=Depends(get_payment_service)) -> Payment:
     payment = service.update(payment_id, data['payment'])
     return payment
@@ -33,10 +33,9 @@ async def update_payment(payment_id: int = Path(), data=Body(),
 
 @router.delete(
     "/{payment_id}",
-    response_model={},
     description="Delete a payment",
 )
-async def delete_payment(payment_id: int = Path(),
+async def delete_payment(payment_id: int,
                          service: PaymentService=Depends(get_payment_service)):
     service.delete(payment_id)
     return {"message": "Payment deleted"}
@@ -47,7 +46,7 @@ async def delete_payment(payment_id: int = Path(),
     response_model=List[Payment],
     description="List all payments for user",
 )
-async def list_user_payments(inn: int = Path(),
+async def list_user_payments(inn: int,
                              service: PaymentService=Depends(get_payment_service)) -> List[Payment]:
     payments = service.get_by_user_inn(inn)
     return payments

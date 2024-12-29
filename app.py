@@ -1,3 +1,4 @@
+import uvicorn
 from fastapi import FastAPI
 from routing.admin import router as router_admin
 from routing.credit_product import router as router_credit_product
@@ -11,3 +12,6 @@ app.include_router(router_credit_product)
 app.include_router(router_legal_user)
 app.include_router(router_payment)
 app.include_router(router_request)
+
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="localhost", port=8080, reload=True)

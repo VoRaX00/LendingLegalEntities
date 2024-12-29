@@ -1,3 +1,5 @@
 fastapi[all]~=0.115.6
 requests
 pydantic~=2.10.4
+uvicorn~=0.34.0
+SQLAlchemy~=2.0.36
