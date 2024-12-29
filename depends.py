@@ -2,10 +2,12 @@ from repositories.admin import AdminRepo
 from repositories.credit_product import CreditProductRepo
 from repositories.legal_user import LegalUserRepo
 from repositories.payment import PaymentRepo
+from repositories.request import RequestRepo
 from service.admin import AdminService
 from service.credit_product import CreditProductService
 from service.legal_user import LegalUserService
 from service.payment import PaymentService
+from service.request import RequestService
 
 admin_repository = AdminRepo()
 admin_service = AdminService(admin_repository)
@@ -26,3 +28,8 @@ payment_repository = PaymentRepo()
 payment_service = PaymentService(payment_repository)
 def get_payment_service():
     return payment_service
+
+request_repository = RequestRepo()
+request_service = RequestService(request_repository)
+def get_request_service():
+    return request_service
