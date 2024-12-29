@@ -4,10 +4,10 @@ from schemas.payment import Payment
 
 
 class PaymentRepo:
-    def create(self, payment):
+    def create(self, payment) -> Payment:
         pass
 
-    def update(self, payment):
+    def update(self, payment_id: int, payment) -> Payment:
         pass
 
     def delete(self, payment_id):
