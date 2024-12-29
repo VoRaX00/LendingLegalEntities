@@ -1,9 +1,9 @@
-from schemas.administrator import Administrator
+from schemas.admin import Administrator
 
 
 class AdminRepo:
-    def get_by_email(self, email):
+    def create(self, admin) -> Administrator:
         pass
 
-    def create(self) -> Administrator:
+    def get_by_email(self, email):
         pass

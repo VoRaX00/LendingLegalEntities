@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from schemas.administrator import Administrator
+from schemas.admin import Administrator
 from schemas.credit_product import CreditProduct
 from schemas.legal_user import LegalUser
 
