@@ -15,8 +15,8 @@ router = APIRouter(prefix="/credit_product", tags=["credit_product"])
     response_model=CreditProduct,
     description="Create a credit product",
 )
-async def create_credit_product(data: CreditProduct = Body(),
-                                service: CreditProductService =Depends(get_credit_product_service)) -> CreditProduct:
+async def create_credit_product(data: CreditProduct=Body(),
+                                service: CreditProductService=Depends(get_credit_product_service)) -> CreditProduct:
     product = service.create(data)
     return product
 

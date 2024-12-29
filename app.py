@@ -1,5 +1,9 @@
 from fastapi import FastAPI
 from routing.admin import router as router_admin
+from routing.credit_product import router as router_credit_product
+from routing.legal_user import router as router_legal_user
 app = FastAPI(openapi="/openapi.json", docs_url="/docs")
 
 app.include_router(router_admin)
+app.include_router(router_credit_product)
+app.include_router(router_legal_user)
