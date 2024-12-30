@@ -25,5 +25,5 @@ async def get_by_email(email: str = Path(..., description="Email of the admin"),
 )
 async def create_admin(data: Administrator = Body(..., description="Administrator data"),
                        admin_service: AdminService = Depends(get_admin_service)) -> Administrator:
-    admin = admin_service.create_admin(data)
+    admin = admin_service.create(data)
     return admin

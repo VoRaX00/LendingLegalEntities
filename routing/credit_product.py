@@ -11,11 +11,9 @@ router = APIRouter(prefix="/credit_product", tags=["credit_product"])
 
 @router.post(
     "/",
-    responses={400: {"description": "Bad request"}, 500: {"description": "Internal Server Error"}},
-    response_model=CreditProduct,
     description="Create a credit product",
 )
-async def create_credit_product(data: CreditProduct=Body(),
+async def create_credit_product(data: CreditProduct=Body(..., description="Credit product data"),
                                 service: CreditProductService=Depends(get_credit_product_service)) -> CreditProduct:
     product = service.create(data)
     return product
@@ -25,7 +23,7 @@ async def create_credit_product(data: CreditProduct=Body(),
     "/{product_id}",
     description="Delete a credit product",
 )
-async def delete_credit_product(product_id: int = Path(),
+async def delete_credit_product(product_id: int = Path(..., description="Product ID"),
                                 service: CreditProductService = Depends(get_credit_product_service)):
     service.delete(product_id)
     return {"message": "Credit product deleted"}
@@ -33,8 +31,6 @@ async def delete_credit_product(product_id: int = Path(),
 
 @router.get(
     "/",
-    responses={500: {"description": "Internal Server Error"}},
-    response_model=List[CreditProduct],
     description="Get all credit products",
 )
 async def get_all_credit_products(service: CreditProductService = Depends(get_credit_product_service)) -> List[CreditProduct]:
@@ -44,13 +40,9 @@ async def get_all_credit_products(service: CreditProductService = Depends(get_cr
 
 @router.get(
     "/{product_id}",
-    responses={
-        404: {"description": "Not found"}, 500: {"description": "Internal Server Error"}
-    },
-    response_model=CreditProduct,
     description="Get a credit product by id",
 )
-async def get_credit_product(product_id: int = Path(),
+async def get_credit_product(product_id: int = Path(..., description="Product ID"),
                              service: CreditProductService = Depends(get_credit_product_service)) -> CreditProduct:
     product = service.get_by_id(product_id)
     return product

@@ -8,7 +8,7 @@ from depends import get_db
 from models.admin import Admins
 
 class AdminRepo:
-    def __init__(self, db :Session = Depends(get_db)):
+    def __init__(self, db: Session = Depends(get_db)):
         self.db = db
 
     def create(self, admin: Admins) -> Admins:
