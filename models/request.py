@@ -6,7 +6,7 @@ class Request(Base):
     __tablename__ = 'requests'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    legal_user_id = Column(Integer, ForeignKey('users.id'))
-    credit_product_id = Column(Integer, ForeignKey('credit_product.id'))
+    legal_user_inn = Column(Integer, ForeignKey('legal_users.inn'))
+    credit_product_id = Column(Integer, ForeignKey('credit_products.id'))
     status = Column(String)
-    administrator_id = Column(Integer, ForeignKey('users.id'))
+    administrator_email = Column(Integer, ForeignKey('admins.email'))

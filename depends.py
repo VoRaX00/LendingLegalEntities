@@ -1,3 +1,4 @@
+from models.database import SessionLocal
 from repositories.admin import AdminRepo
 from repositories.credit_product import CreditProductRepo
 from repositories.legal_user import LegalUserRepo
@@ -33,3 +34,10 @@ request_repository = RequestRepo()
 request_service = RequestService(request_repository)
 def get_request_service():
     return request_service
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
