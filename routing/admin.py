@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Path
+from fastapi import APIRouter, Body, Path, HTTPException
 from fastapi.params import Depends
 
 from depends import get_admin_service
@@ -9,27 +9,21 @@ router = APIRouter(prefix="/admin", tags=["admin"])
 
 @router.get(
     "/",
-    responses={
-        400: {"description": "Bad request"},
-        404: {"description": "Not found"},
-        500: {"description": "Internal Server Error"}
-    },
-    response_model=Administrator,
     description="Get admin by email",
 )
-async def get_by_email(email: str = Path(), admin_service: AdminService = Depends(get_admin_service)) -> Administrator:
-    admin = admin_service.get_by_email(email)
+async def get_by_email(email: str = Path(..., description="Email of the admin"),
+                       admin_service: AdminService = Depends(get_admin_service)) -> Administrator:
+    try:
+        admin = admin_service.get_by_email(email)
+    except HTTPException as e:
+        raise HTTPException(status_code=e.status_code, detail=e.detail)
     return admin
 
 @router.post(
     "/",
-    responses={
-        400: {"description": "Bad request"},
-        500: {"description": "Internal Server Error"}
-    },
-    response_model=Administrator,
     description="Create admin by email",
 )
-async def create_admin(data = Body(), admin_service: AdminService = Depends(get_admin_service)) -> Administrator:
-    admin = admin_service.get_by_email(data["admin"])
+async def create_admin(data: Administrator = Body(..., description="Administrator data"),
+                       admin_service: AdminService = Depends(get_admin_service)) -> Administrator:
+    admin = admin_service.create_admin(data)
     return admin
