@@ -2,6 +2,7 @@ from repositories.legal_user import LegalUserRepo
 from schemas.legal_user import LegalUser
 from models.legal_user import LegalUser as LegalUserModel
 from service.exceptions.already_exists import AlreadyExistsException
+from service.exceptions.internal_server import InternalServerException
 from service.exceptions.not_found import NotFoundException
 
 
@@ -20,7 +21,13 @@ class LegalUserService:
         exists_user = self.repository.get_by_inn(user.inn)
         if exists_user:
             raise AlreadyExistsException('User already exists')
-        return self.repository.create(user)
+
+        model = map_schemas_to_model(user)
+        try:
+            model = self.repository.create(model)
+        except Exception as e:
+            raise InternalServerException()
+        return LegalUser.model_validate(model)
 
     def get_by_inn(self, inn: int) -> LegalUser:
         user = self.repository.get_by_inn(inn)

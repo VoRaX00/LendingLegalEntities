@@ -3,6 +3,7 @@ from typing import List
 from repositories.payment import PaymentRepo
 from schemas.payment import Payment
 from models.payment import Payment as PaymentModels
+from service.exceptions.internal_server import InternalServerException
 from service.exceptions.not_found import NotFoundException
 
 
@@ -22,7 +23,11 @@ class PaymentService:
 
     def create(self, payment: Payment) -> Payment:
         model = map_schemas_to_model(payment)
-        model = self.repository.create(model)
+
+        try:
+            model = self.repository.create(model)
+        except Exception as e:
+            raise InternalServerException()
         return Payment.model_validate(model)
 
     def update(self, payment_id: int, payment: Payment) -> Payment:
@@ -31,14 +36,22 @@ class PaymentService:
             raise NotFoundException("Payment not found")
 
         model = map_schemas_to_model(payment)
-        model = self.repository.update(payment_id, model)
+
+        try:
+            model = self.repository.update(payment_id, model)
+        except Exception as e:
+            raise InternalServerException()
         return Payment.model_validate(model)
 
     def delete(self, payment_id: int):
         exists_payment = self.repository.get_by_id(payment_id)
         if exists_payment is None:
             raise NotFoundException("Payment not found")
-        self.repository.delete(payment_id)
+
+        try:
+            self.repository.delete(payment_id)
+        except Exception as e:
+            raise InternalServerException()
 
     def get_by_user_inn(self, inn: int) -> List[Payment]:
         payments = self.repository.get_by_user_inn(inn)
