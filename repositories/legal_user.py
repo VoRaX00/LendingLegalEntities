@@ -1,7 +1,7 @@
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 
-from depends import get_db
+from models.database import get_db
 from models.legal_user import LegalUser
 
 

@@ -1,6 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
-from models.database import engine, Base, SessionLocal
+from models.database import engine, Base
 from routing.admin import router as router_admin
 from routing.credit_product import router as router_credit_product
 from routing.legal_user import router as router_legal_user

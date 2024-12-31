@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 
-from database import Base
+from models.database import Base
 
 class Request(Base):
     __tablename__ = 'requests'

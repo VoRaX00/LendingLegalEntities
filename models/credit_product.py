@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float
 
-from database import Base
+from models.database import Base
 
 class CreditProduct(Base):
     __tablename__ = 'credit_products'

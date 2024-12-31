@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey, Float, Date
 
-from database import Base
+from models.database import Base
 
 class Payment(Base):
     __tablename__ = 'payments'

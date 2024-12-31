@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 
-from database import Base
+from models.database import Base
 
 class LegalUser(Base):
     __tablename__ = 'legal_users'
