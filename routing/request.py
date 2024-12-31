@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Path
 from fastapi.params import Depends
 
 from depends import get_request_service
@@ -12,31 +12,29 @@ router = APIRouter(prefix="/request", tags=["request"])
 
 @router.post(
     "/",
-    response_model=Request,
     description="Create a new request",
 )
-async def create_request(data=Body(),
+async def create_request(data: Request = Body(..., description="Request data"),
                          service: RequestService=Depends(get_request_service)) -> Request:
-    req = service.create(data["request"])
+    req = service.create(data)
     return req
 
 @router.put(
     "/{request_id}",
-    response_model=Request,
     description="Update a request",
 )
-async def update_request(request_id: int, data=Body(),
+async def update_request(request_id: int = Path(..., description="Request id"),
+                         data: Request = Body(..., description="Request data"),
                          service: RequestService=Depends(get_request_service)) -> Request:
-    req = service.update(request_id, data["req"])
+    req = service.update(request_id, data)
     return req
 
 
 @router.get(
     "/user/{inn}",
-    response_model=List[Request],
     description="List all requests for user",
 )
-async def get_request(inn: int,
+async def get_user_requests(inn: int = Path(..., description="Request id"),
                       service: RequestService=Depends(get_request_service)) -> List[Request]:
     req = service.get_by_inn(inn)
     return req
@@ -44,7 +42,6 @@ async def get_request(inn: int,
 
 @router.get(
     "/",
-    response_model=List[Request],
     description="List all requests",
 )
 async def get_requests(service: RequestService=Depends(get_request_service)) -> List[Request]:

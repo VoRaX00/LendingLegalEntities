@@ -19,7 +19,7 @@ class CreditProductRepo:
         return credit_product
 
     def delete(self, product_id: int):
-        self.db.query(CreditProduct).filter_by(id=product_id).delete()
+        self.db.query(CreditProduct).filter(CreditProduct.id == product_id).delete()
         self.db.commit()
 
     def get_all(self) -> List[CreditProduct]:
@@ -28,5 +28,5 @@ class CreditProductRepo:
 
 
     def get_by_id(self, product_id: int) -> CreditProduct | None:
-        product = self.db.query(CreditProduct).filter_by(id=product_id).first()
+        product = self.db.query(CreditProduct).filter(CreditProduct.id == product_id).first()
         return product

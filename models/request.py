@@ -9,4 +9,4 @@ class Request(Base):
     legal_user_inn = Column(Integer, ForeignKey('legal_users.inn'))
     credit_product_id = Column(Integer, ForeignKey('credit_products.id'))
     status = Column(String)
-    administrator_email = Column(Integer, ForeignKey('admins.email'))
+    administrator_email = Column(String, ForeignKey('admins.email'))
