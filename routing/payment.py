@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Body
+from fastapi import APIRouter, Body, Path
 from fastapi.params import Depends
 
 from depends import get_payment_service
@@ -11,23 +11,22 @@ router = APIRouter(prefix="/payment", tags=["payment"])
 
 @router.post(
     "/",
-    response_model=Payment,
     description="Create a payment",
 )
-async def create_payment(data=Body(),
+async def create_payment(data: Payment = Body(..., description="Payment data"),
                          service: PaymentService=Depends(get_payment_service)) -> Payment:
-    payment = service.create(data['payment'])
+    payment = service.create(data)
     return payment
 
 
 @router.put(
     "/{payment_id}",
-    response_model=Payment,
     description="Update a payment",
 )
-async def update_payment(payment_id: int, data=Body(),
+async def update_payment(payment_id: int = Path(..., description="Payment ID"),
+                         data: Payment = Body(..., description="Payment data"),
                          service: PaymentService=Depends(get_payment_service)) -> Payment:
-    payment = service.update(payment_id, data['payment'])
+    payment = service.update(payment_id, data)
     return payment
 
 
@@ -35,7 +34,7 @@ async def update_payment(payment_id: int, data=Body(),
     "/{payment_id}",
     description="Delete a payment",
 )
-async def delete_payment(payment_id: int,
+async def delete_payment(payment_id: int = Path(..., description="Payment ID"),
                          service: PaymentService=Depends(get_payment_service)):
     service.delete(payment_id)
     return {"message": "Payment deleted"}
@@ -43,10 +42,9 @@ async def delete_payment(payment_id: int,
 
 @router.get(
     "/user/{inn}",
-    response_model=List[Payment],
     description="List all payments for user",
 )
-async def list_user_payments(inn: int,
+async def list_user_payments(inn: int = Path(..., description="User INN"),
                              service: PaymentService=Depends(get_payment_service)) -> List[Payment]:
     payments = service.get_by_user_inn(inn)
     return payments
@@ -54,7 +52,6 @@ async def list_user_payments(inn: int,
 
 @router.get(
     "/",
-    response_model=List[Payment],
     description="List all payments",
 )
 async def list_all_payments(service: PaymentService=Depends(get_payment_service)) -> List[Payment]:
