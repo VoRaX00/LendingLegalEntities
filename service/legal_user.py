@@ -1,14 +1,29 @@
 from repositories.legal_user import LegalUserRepo
 from schemas.legal_user import LegalUser
+from models.legal_user import LegalUser as LegalUserModel
+from service.exceptions.already_exists import AlreadyExistsException
+from service.exceptions.not_found import NotFoundException
 
+
+def map_schemas_to_model(user: LegalUser) -> LegalUserModel:
+    return LegalUserModel(
+        inn=user.inn, name=user.name,
+        type_activity=user.type_activity, contact_person=user.contact_person,
+        address=user.address,
+    )
 
 class LegalUserService:
-
     def __init__(self, repository: LegalUserRepo):
         self.repository = repository
 
-    def create(self, user) -> LegalUser:
+    def create(self, user: LegalUser) -> LegalUser:
+        exists_user = self.repository.get_by_inn(user.inn)
+        if exists_user:
+            raise AlreadyExistsException('User already exists')
         return self.repository.create(user)
 
     def get_by_inn(self, inn: int) -> LegalUser:
-        return self.repository.get_by_inn(inn)
+        user = self.repository.get_by_inn(inn)
+        if user is None:
+            raise NotFoundException('User not found')
+        return LegalUser.model_validate(user)

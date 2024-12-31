@@ -16,7 +16,7 @@ router = APIRouter(prefix="/legal_user", tags=["legal_user"])
     response_model=LegalUser,
     description="Get legal user by inn"
 )
-async def legal_user(inn: int = Path(),
+async def legal_user(inn: int = Path(..., description='User INN'),
                      service: LegalUserService=Depends(get_legal_user_service)) -> LegalUser:
     user = service.get_by_inn(inn)
     return user
@@ -26,7 +26,7 @@ async def legal_user(inn: int = Path(),
     "/",
     description="Create legal user",
 )
-async def create_legal_user(data=Body(),
+async def create_legal_user(data: LegalUser = Body(..., description='Legal user data'),
                             service :LegalUserService=Depends(get_legal_user_service)) -> LegalUser:
-    user = service.create(data["user"])
+    user = service.create(data)
     return user
