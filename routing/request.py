@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Body, Path
 from fastapi.params import Depends
 
-from depends import get_request_service
+from service import get_request_service
 from schemas.request import Request
 from service.request import RequestService
 

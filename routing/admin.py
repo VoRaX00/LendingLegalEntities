@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Body, Path, HTTPException
 from fastapi.params import Depends
 
-from depends import get_admin_service
+from service import get_admin_service
 from schemas.admin import Administrator
 from service.admin import AdminService
 

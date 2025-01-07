@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, Body, Path
 from fastapi.params import Depends
 
-from depends import get_credit_product_service
+from service import get_credit_product_service
 from schemas.credit_product import CreditProduct
 from service.credit_product import CreditProductService
 

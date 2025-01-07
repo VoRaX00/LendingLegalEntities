@@ -6,12 +6,7 @@ from service.exceptions.internal_server import InternalServerException
 from service.exceptions.not_found import NotFoundException
 
 
-def map_schemas_to_model(user: LegalUser) -> LegalUserModel:
-    return LegalUserModel(
-        inn=user.inn, name=user.name,
-        type_activity=user.type_activity, contact_person=user.contact_person,
-        address=user.address,
-    )
+
 
 class LegalUserService:
     def __init__(self, repository: LegalUserRepo):
@@ -22,7 +17,7 @@ class LegalUserService:
         if exists_user:
             raise AlreadyExistsException('User already exists')
 
-        model = map_schemas_to_model(user)
+        model = self.map_schemas_to_model(user)
         try:
             model = self.repository.create(model)
         except Exception as e:
@@ -34,3 +29,11 @@ class LegalUserService:
         if user is None:
             raise NotFoundException('User not found')
         return LegalUser.model_validate(user)
+
+    @staticmethod
+    def map_schemas_to_model(user: LegalUser) -> LegalUserModel:
+        return LegalUserModel(
+            inn=user.inn, name=user.name,
+            type_activity=user.type_activity, contact_person=user.contact_person,
+            address=user.address,
+        )

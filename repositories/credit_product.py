@@ -1,15 +1,11 @@
 from typing import List
-
-from fastapi.params import Depends
 from sqlalchemy.orm import Session
-
 from models.credit_product import CreditProduct
-from models.database import get_db
 
 
 class CreditProductRepo:
 
-    def __init__(self, db: Session = Depends(get_db)):
+    def __init__(self, db: Session):
         self.db = db
 
     def create(self, credit_product: CreditProduct) -> CreditProduct:

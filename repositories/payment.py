@@ -1,14 +1,10 @@
 from typing import List
-
-from fastapi.params import Depends
 from sqlalchemy.orm import Session
-
-from models.database import get_db
 from models.payment import Payment
 
 
 class PaymentRepo:
-    def __init__(self, db: Session = Depends(get_db)):
+    def __init__(self, db: Session):
         self.db = db
 
     def create(self, payment: Payment) -> Payment:

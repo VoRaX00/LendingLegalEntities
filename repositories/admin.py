@@ -1,12 +1,9 @@
-from fastapi.params import Depends
 from sqlalchemy.orm import Session
-
 from models.admin import Admins
-from models.database import get_db
 
 
 class AdminRepo:
-    def __init__(self, db: Session = Depends(get_db)):
+    def __init__(self, db: Session):
         self.db = db
 
     def create(self, admin: Admins) -> Admins:

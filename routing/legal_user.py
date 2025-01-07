@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Path, Body
 from fastapi.params import Depends
 
-from depends import get_legal_user_service
+from service import get_legal_user_service
 from schemas.legal_user import LegalUser
 from service.legal_user import LegalUserService
 
