@@ -7,24 +7,18 @@ from service.exceptions.internal_server import InternalServerException
 from service.exceptions.not_found import NotFoundException
 
 
-def map_schemas_to_model(product: CreditProduct) -> CreditProductModel:
-    return CreditProductModel(name=product.name, type_product=product.type_product,
-                              percent=product.percent, repayment_period=product.repayment_period,
-                              amount=product.amount, recommended_payment=product.recommended_payment,
-                              )
-
 class CreditProductService:
     def __init__(self, repository: CreditProductRepo):
         self.repository = repository
 
     def create(self, credit_product: CreditProduct) -> CreditProduct:
-        model = map_schemas_to_model(credit_product)
+        model = self.map_schemas_to_model(credit_product)
         try:
             result = self.repository.create(model)
         except Exception as e:
             raise InternalServerException()
 
-        return CreditProduct.model_validate(result)
+        return self.map_schemas_to_model(result)
 
     def delete(self, product_id: int):
         try:
@@ -34,14 +28,26 @@ class CreditProductService:
 
     def get_all(self) -> List[CreditProduct]:
         products = self.repository.get_all()
-        result = List[CreditProductModel]()
+        result = List[CreditProduct]()
 
         for product in products:
-            result.append(CreditProduct.model_validate(product))
+            result.append(self.map_model_to_schema(product))
         return result
 
     def get_by_id(self, product_id: int) -> CreditProduct:
         product = self.repository.get_by_id(product_id)
         if product is None:
             raise NotFoundException("Product not found")
-        return CreditProduct.model_validate(product)
+        return self.map_model_to_schema(product)
+
+    @staticmethod
+    def map_schemas_to_model(product: CreditProduct) -> CreditProductModel:
+        return CreditProductModel(name=product.name, type_product=product.type_product,
+                                  percent=product.percent, repayment_period=product.repayment_period,
+                                  amount=product.amount, recommended_payment=product.recommended_payment)
+
+    @staticmethod
+    def map_model_to_schema(model: CreditProductModel) -> CreditProduct:
+        return CreditProduct(name=model.name, type_product=model.type_product,
+                             percent=model.percent, repayment_period=model.repayment_period,
+                             amount=model.amount, recommended_payment=model.recommended_payment)

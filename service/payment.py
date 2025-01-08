@@ -1,20 +1,13 @@
 from typing import List
 
 from repositories.payment import PaymentRepo
+from routing.legal_user import legal_user
+from schemas.legal_user import LegalUser
 from schemas.payment import Payment
 from models.payment import Payment as PaymentModels
 from service.exceptions.internal_server import InternalServerException
 from service.exceptions.not_found import NotFoundException
-
-
-def map_schemas_to_model(payment: Payment) -> PaymentModels:
-    return PaymentModels(
-        legal_user_inn=payment.legal_user.inn,
-        recommended_payment=payment.recommended_payment,
-        delay=payment.delay,
-        date_payment=payment.date_payment,
-        date_replenishment=payment.date_replenishment,
-    )
+from service.request import map_schemas_to_model
 
 
 class PaymentService:
@@ -22,26 +15,26 @@ class PaymentService:
         self.repository = repository
 
     def create(self, payment: Payment) -> Payment:
-        model = map_schemas_to_model(payment)
+        model = self.map_schemas_to_model(payment)
 
         try:
             model = self.repository.create(model)
         except Exception as e:
             raise InternalServerException()
-        return Payment.model_validate(model)
+        return self.map_model_to_schema(model)
 
     def update(self, payment_id: int, payment: Payment) -> Payment:
         exists_payment = self.repository.get_by_id(payment_id)
         if exists_payment is None:
             raise NotFoundException("Payment not found")
 
-        model = map_schemas_to_model(payment)
+        model = self.map_schemas_to_model(payment)
 
         try:
             model = self.repository.update(payment_id, model)
         except Exception as e:
             raise InternalServerException()
-        return Payment.model_validate(model)
+        return self.map_model_to_schema(model)
 
     def delete(self, payment_id: int):
         exists_payment = self.repository.get_by_id(payment_id)
@@ -57,13 +50,33 @@ class PaymentService:
         payments = self.repository.get_by_user_inn(inn)
         result = List[Payment]()
         for payment in payments:
-            result.append(Payment.model_validate(payment))
-
+            result.append(self.map_model_to_schema(payment))
         return result
 
     def get_all(self) -> List[Payment]:
         payments = self.repository.get_all()
         result = List[Payment]()
         for payment in payments:
-            result.append(Payment.model_validate(payment))
+            result.append(self.map_model_to_schema(payment))
         return result
+
+    @staticmethod
+    def map_schemas_to_model(payment: Payment) -> PaymentModels:
+        return PaymentModels(
+            legal_user_inn=payment.legal_user.inn,
+            recommended_payment=payment.recommended_payment,
+            delay=payment.delay,
+            date_payment=payment.date_payment,
+            date_replenishment=payment.date_replenishment,
+        )
+
+    @staticmethod
+    def map_model_to_schema(payment: PaymentModels) -> Payment:
+        return Payment(
+            id=payment.id,
+            legal_user=LegalUser(inn=payment.legal_user_inn),
+            recommended_payment=payment.recommended_payment,
+            delay=payment.delay,
+            date_payment=payment.date_payment,
+            date_replenishment=payment.date_replenishment,
+        )

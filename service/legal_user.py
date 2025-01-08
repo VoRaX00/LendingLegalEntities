@@ -6,8 +6,6 @@ from service.exceptions.internal_server import InternalServerException
 from service.exceptions.not_found import NotFoundException
 
 
-
-
 class LegalUserService:
     def __init__(self, repository: LegalUserRepo):
         self.repository = repository
@@ -22,17 +20,25 @@ class LegalUserService:
             model = self.repository.create(model)
         except Exception as e:
             raise InternalServerException()
-        return LegalUser.model_validate(model)
+        return self.map_model_to_schemas(model)
 
     def get_by_inn(self, inn: int) -> LegalUser:
         user = self.repository.get_by_inn(inn)
         if user is None:
             raise NotFoundException('User not found')
-        return LegalUser.model_validate(user)
+        return self.map_model_to_schemas(user)
 
     @staticmethod
     def map_schemas_to_model(user: LegalUser) -> LegalUserModel:
         return LegalUserModel(
+            inn=user.inn, name=user.name,
+            type_activity=user.type_activity, contact_person=user.contact_person,
+            address=user.address,
+        )
+
+    @staticmethod
+    def map_model_to_schemas(user: LegalUserModel) -> LegalUser:
+        return LegalUser(
             inn=user.inn, name=user.name,
             type_activity=user.type_activity, contact_person=user.contact_person,
             address=user.address,
