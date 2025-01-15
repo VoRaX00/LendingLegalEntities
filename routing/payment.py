@@ -30,15 +30,6 @@ async def update_payment(payment_id: int = Path(..., description="Payment ID"),
     return payment
 
 
-@router.delete(
-    "/{payment_id}",
-    description="Delete a payment",
-)
-async def delete_payment(payment_id: int = Path(..., description="Payment ID"),
-                         service: PaymentService=Depends(get_payment_service)):
-    service.delete(payment_id)
-    return {"message": "Payment deleted"}
-
 
 @router.get(
     "/user/{inn}",

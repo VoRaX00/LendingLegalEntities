@@ -19,16 +19,6 @@ async def create_credit_product(data: CreditProduct=Body(..., description="Credi
     return product
 
 
-@router.delete(
-    "/{product_id}",
-    description="Delete a credit product",
-)
-async def delete_credit_product(product_id: int = Path(..., description="Product ID"),
-                                service: CreditProductService = Depends(get_credit_product_service)):
-    service.delete(product_id)
-    return {"message": "Credit product deleted"}
-
-
 @router.get(
     "/",
     description="Get all credit products",

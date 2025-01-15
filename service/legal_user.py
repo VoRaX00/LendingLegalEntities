@@ -1,3 +1,8 @@
+import datetime
+from datetime import timezone
+
+from jose import jwt
+
 from repositories.legal_user import LegalUserRepo
 from schemas.legal_user import LegalUser
 from models.legal_user import LegalUser as LegalUserModel
@@ -10,6 +15,18 @@ class LegalUserService:
     def __init__(self, repository: LegalUserRepo):
         self.repository = repository
 
+    def create_access_token(self, data: dict):
+        to_encode = data.copy()
+        expire = datetime.datetime.now(timezone.utc) + datetime.timedelta(days=30)
+        to_encode.update({"exp": expire})
+        auth_data = {
+            "secret_key": "oeaibjonbis-ij93rjfpa",
+            "algorithm": "HS256",
+        }
+
+        encode_jwt = jwt.encode(to_encode, auth_data['secret_key'], algorithm="HS256")
+        return encode_jwt
+
     def create(self, user: LegalUser) -> LegalUser:
         exists_user = self.repository.get_by_inn(user.inn)
         if exists_user:
@@ -20,6 +37,7 @@ class LegalUserService:
             model = self.repository.create(model)
         except Exception as e:
             raise InternalServerException()
+
         return self.map_model_to_schemas(model)
 
     def get_by_inn(self, inn: int) -> LegalUser:

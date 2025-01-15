@@ -1,9 +1,6 @@
 from typing import List
 
-from urllib3 import request
-
 from repositories.request import RequestRepo
-from routing.legal_user import legal_user
 from schemas.admin import Administrator
 from schemas.credit_product import CreditProduct
 from schemas.legal_user import LegalUser
