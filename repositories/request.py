@@ -1,5 +1,5 @@
 from typing import List
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from models.request import Request
 
 
@@ -22,11 +22,19 @@ class RequestRepo:
         return request
 
     def get_by_inn(self, inn) -> List[Request]:
-        requests = self.db.query(Request).filter(Request.legal_user_inn == inn).all()
+        requests = self.db.query(Request).options(
+            joinedload(Request.legal_user),
+            joinedload(Request.credit_product),
+            joinedload(Request.administrators)
+        ).filter(Request.legal_user_inn == inn).all()
         return requests
 
     def get_all(self) -> List[Request]:
-        requests = self.db.query(Request).all()
+        requests = self.db.query(Request).options(
+            joinedload(Request.legal_user),
+            joinedload(Request.credit_product),
+            joinedload(Request.administrators)
+        ).all()
         return requests
 
     def get_by_id(self, request_id) -> Request | None:

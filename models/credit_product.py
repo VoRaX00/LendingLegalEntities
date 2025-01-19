@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy.orm import relationship
 
 from models.database import Base
 
@@ -12,3 +13,5 @@ class CreditProduct(Base):
     repayment_period = Column(Integer, nullable=False)
     amount = Column(Float, nullable=False)
     recommended_payment = Column(Float, nullable=False)
+
+    requests = relationship('Request', back_populates='credit_product')

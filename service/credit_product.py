@@ -28,10 +28,11 @@ class CreditProductService:
 
     def get_all(self) -> List[CreditProduct]:
         products = self.repository.get_all()
-        result = List[CreditProduct]()
+        result = []
 
         for product in products:
             result.append(self.map_model_to_schema(product))
+
         return result
 
     def get_by_id(self, product_id: int) -> CreditProduct:
