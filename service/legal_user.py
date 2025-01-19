@@ -28,6 +28,17 @@ class LegalUserService:
 
         return self.map_model_to_schemas(model)
 
+    def get_all(self):
+        try:
+            users = self.repository.get_all()
+        except Exception as e:
+            raise InternalServerException()
+
+        result = []
+        for user in users:
+            result.append(self.map_model_to_schemas(user))
+        return result
+
     def get_by_inn(self, inn: int) -> LegalUser:
         user = self.repository.get_by_inn(inn)
         if user is None:

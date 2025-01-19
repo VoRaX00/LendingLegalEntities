@@ -58,7 +58,7 @@ class PaymentService:
 
     def get_all(self) -> List[Payment]:
         payments = self.repository.get_all()
-        result = List[Payment]()
+        result = []
         for payment in payments:
             result.append(self.map_model_to_schema(payment))
         return result

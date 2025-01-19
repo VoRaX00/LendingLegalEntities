@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 from django.core.exceptions import BadRequest
 from fastapi import APIRouter, Path, Body, Request, Response
@@ -39,15 +39,23 @@ async def legal_user(request: Request,
     user = service.get_by_inn(inn)
     return user
 
+@router.get(
+    "/all",
+    responses={
+        404: {"description": "Not found"},
+    },
+    description="Get all"
+)
+async def all_legal_user(service: LegalUserService=Depends(get_legal_user_service)) -> List[LegalUser] | None:
+    return service.get_all()
 
 @router.post(
     "/",
     description="Create legal user",
 )
 async def create_legal_user(data: LegalUser = Body(..., description='Legal user data'),
-                            service: LegalUserService=Depends(get_legal_user_service)) -> LegalUser:
+                            service: LegalUserService=Depends(get_legal_user_service)):
     user = service.create(data)
-    return user
 
 @router.post(
     "/login",
