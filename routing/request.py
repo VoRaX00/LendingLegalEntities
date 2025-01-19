@@ -25,7 +25,7 @@ async def create_request(data: RequestAdd = Body(..., description="Request data"
 )
 async def update_request(request_id: int = Path(..., description="Request id"),
                          data: Request = Body(..., description="Request data"),
-                         service: RequestService=Depends(get_request_service)) -> Request:
+                         service: RequestService=Depends(get_request_service)) -> RequestGet:
     req = service.update(request_id, data)
     return req
 

@@ -5,20 +5,16 @@ from schemas.credit_product import CreditProduct
 from schemas.legal_user import LegalUser
 
 class Request(BaseModel):
-    id: int
-    legal_user: LegalUser
-    credit_product: CreditProduct
     status: str
-    administrator: Administrator
+    email: str
+
 
 class RequestGet(BaseModel):
     id: int
     legal_user_inn: int
-    legal_user_name: str
     product_id: int
-    product_name: str
     amount: int
-    administrator: Administrator
+    administrator_email: str
     status: str
 
 

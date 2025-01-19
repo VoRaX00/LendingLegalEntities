@@ -41,7 +41,8 @@ async def login(data: AdministratorLoginEmail = Body(..., description="Email of 
         raise BadRequest("Invalid email")
 
     payload = {
-        "email": data.email,
+        "email": admin.email,
+        "login": admin.login,
         "type": "admin"
     }
 

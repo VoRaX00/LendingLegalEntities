@@ -1,5 +1,8 @@
+from datetime import datetime, timedelta
 from typing import List
 from sqlalchemy.orm import Session, joinedload
+
+from models.payment import Payment
 from models.request import Request
 
 
@@ -19,6 +22,28 @@ class RequestRepo:
         })
         self.db.commit()
         self.db.refresh(request)
+
+        if request.status == 'принята':
+            # Получаем информацию о кредитном продукте
+            credit_product = request.credit_product
+            repayment_period = credit_product.repayment_period
+            recommended_payment = credit_product.recommended_payment
+            start_date = datetime.now().date()  # Текущая дата
+
+            # Генерируем платежи для каждого месяца
+            for i in range(repayment_period):
+                payment_date = start_date + timedelta(days=30 * (i + 1))
+                payment = Payment(
+                    legal_user_inn=request.legal_user_inn,
+                    recommended_payment=recommended_payment,
+                    delay=0,
+                    date_payment=payment_date,
+                    date_replenishment=None
+                )
+                self.db.add(payment)
+
+            self.db.commit()
+
         return request
 
     def get_by_inn(self, inn) -> List[Request]:

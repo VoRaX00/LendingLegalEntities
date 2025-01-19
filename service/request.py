@@ -21,18 +21,20 @@ class RequestService:
 
         return self.map_model_to_schema(model)
 
-    def update(self, request_id: int, req) -> Request:
+    def update(self, request_id: int, req) -> RequestGet:
         exists_request = self.repository.get_by_id(request_id)
         if exists_request is None:
             raise NotFoundException("Request not found")
 
-        model = self.map_schemas_to_model(req)
+        exists_request.administrator_email = req.email
+        exists_request.status = req.status
+
         try:
-            model =self.repository.update(request_id, model)
+            model =self.repository.update(request_id, exists_request)
         except Exception as e:
             raise InternalServerException()
 
-        return self.map_model_to_schema(model)
+        return self.map_model_to_schema_get(model)
 
     def get_by_inn(self, inn: int) -> List[RequestGet]:
         requests =  self.repository.get_by_inn(inn)
@@ -57,22 +59,15 @@ class RequestService:
         )
 
     @staticmethod
+    @staticmethod
     def map_model_to_schema_get(req: RequestModel) -> RequestGet:
-        admin = Administrator
-        if req.administrators is None:
-            admin.email = ''
-            admin.login = 'Не определён'
-        else:
-            admin.email = req.administrators.email
-            admin.login = req.administrators.name
+        email = req.administrator_email or "Не определён"
         return RequestGet(
             id=req.id,
             legal_user_inn=req.legal_user_inn,
-            legal_user_name=req.legal_user.name,
             product_id=req.credit_product_id,
-            product_name=req.credit_product.name,
             amount=req.credit_product.amount,
-            administrator=admin,
+            administrator_email=email,
             status=req.status,
         )
 

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body, Path
 from fastapi.params import Depends
 
 from service import get_payment_service
-from schemas.payment import Payment
+from schemas.payment import Payment, PaymentUpdate
 from service.payment import PaymentService
 
 router = APIRouter(prefix="/payment", tags=["payment"])
@@ -24,7 +24,7 @@ async def create_payment(data: Payment = Body(..., description="Payment data"),
     description="Update a payment",
 )
 async def update_payment(payment_id: int = Path(..., description="Payment ID"),
-                         data: Payment = Body(..., description="Payment data"),
+                         data: PaymentUpdate = Body(..., description="Payment data"),
                          service: PaymentService=Depends(get_payment_service)) -> Payment:
     payment = service.update(payment_id, data)
     return payment
