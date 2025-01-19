@@ -1,13 +1,11 @@
 from typing import List
 
 from repositories.payment import PaymentRepo
-from routing.legal_user import legal_user
 from schemas.legal_user import LegalUser
 from schemas.payment import Payment
 from models.payment import Payment as PaymentModels
 from service.exceptions.internal_server import InternalServerException
 from service.exceptions.not_found import NotFoundException
-from service.request import map_schemas_to_model
 
 
 class PaymentService:

@@ -4,7 +4,7 @@ from fastapi import APIRouter, Body, Path
 from fastapi.params import Depends
 
 from service import get_credit_product_service
-from schemas.credit_product import CreditProduct
+from schemas.credit_product import CreditProduct, CreditProductAdd
 from service.credit_product import CreditProductService
 
 router = APIRouter(prefix="/credit_product", tags=["credit_product"])
@@ -13,7 +13,7 @@ router = APIRouter(prefix="/credit_product", tags=["credit_product"])
     "/",
     description="Create a credit product",
 )
-async def create_credit_product(data: CreditProduct=Body(..., description="Credit product data"),
+async def create_credit_product(data: CreditProductAdd=Body(..., description="Credit product data"),
                                 service: CreditProductService=Depends(get_credit_product_service)) -> CreditProduct:
     product = service.create(data)
     return product

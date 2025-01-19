@@ -1,14 +1,13 @@
 from datetime import datetime, timezone
 from typing import Dict, Any
 
-from fastapi import APIRouter, Path, Body
+from django.core.exceptions import BadRequest
+from fastapi import APIRouter, Path, Body, Request, Response
 
 from fastapi.params import Depends
-from rest_framework.request import Request
-from rest_framework.response import Response
 
 from service import get_legal_user_service
-from schemas.legal_user import LegalUser
+from schemas.legal_user import LegalUser, LegalUserLogin, LegalUserLoginInn
 from service.exceptions.unauthorized import UnAuthorized
 from service.legal_user import LegalUserService
 from token_manager.token import TokenManager
@@ -51,18 +50,20 @@ async def create_legal_user(data: LegalUser = Body(..., description='Legal user 
     return user
 
 @router.post(
-    "/",
+    "/login",
     description="Login",
 )
-async def login(response: Response, data: int = Body(..., description='user inn'),
-                service: LegalUserService=Depends(get_legal_user_service)) -> dict[str, LegalUser | Any]:
-    user = service.get_by_inn(data)
+async def login(data: LegalUserLoginInn = Body(..., description='user inn'),
+                service: LegalUserService=Depends(get_legal_user_service)) -> LegalUserLogin:
+    user = service.get_by_inn(data.inn)
+    if user is None:
+        raise BadRequest("Неверный инн")
+
     payload = {
-        "inn": user.inn
+        "inn": user.inn,
+        "type": "user"
     }
     token = TokenManager.create_token(payload)
-    response.set_cookie(key="token_manager", value=token, httponly=True)
-    return {
-        "user": user,
-        "token_manager": token
-    }
+    resp = LegalUserLogin
+    resp.token = token
+    return resp

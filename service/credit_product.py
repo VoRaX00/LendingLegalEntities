@@ -1,7 +1,7 @@
 from typing import List
 
 from repositories.credit_product import CreditProductRepo
-from schemas.credit_product import CreditProduct
+from schemas.credit_product import CreditProduct, CreditProductAdd
 from models.credit_product import CreditProduct as CreditProductModel
 from service.exceptions.internal_server import InternalServerException
 from service.exceptions.not_found import NotFoundException
@@ -11,14 +11,14 @@ class CreditProductService:
     def __init__(self, repository: CreditProductRepo):
         self.repository = repository
 
-    def create(self, credit_product: CreditProduct) -> CreditProduct:
+    def create(self, credit_product: CreditProductAdd) -> CreditProduct:
         model = self.map_schemas_to_model(credit_product)
         try:
             result = self.repository.create(model)
         except Exception as e:
             raise InternalServerException()
 
-        return self.map_schemas_to_model(result)
+        return self.map_model_to_schema(result)
 
     def delete(self, product_id: int):
         try:
@@ -48,6 +48,6 @@ class CreditProductService:
 
     @staticmethod
     def map_model_to_schema(model: CreditProductModel) -> CreditProduct:
-        return CreditProduct(name=model.name, type_product=model.type_product,
+        return CreditProduct(id=model.id, name=model.name, type_product=model.type_product,
                              percent=model.percent, repayment_period=model.repayment_period,
                              amount=model.amount, recommended_payment=model.recommended_payment)

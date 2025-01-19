@@ -9,10 +9,19 @@ from routing.request import router as router_request
 from service.exceptions.already_exists import AlreadyExistsException, already_exists
 from service.exceptions.internal_server import InternalServerException, internal_server
 from service.exceptions.not_found import not_found, NotFoundException
+from fastapi.middleware.cors import CORSMiddleware
+
 
 app = FastAPI(openapi="/openapi.json", docs_url="/docs")
 Base.metadata.create_all(bind=engine)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(router_admin)
 app.include_router(router_credit_product)
 app.include_router(router_legal_user)

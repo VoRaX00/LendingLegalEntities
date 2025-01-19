@@ -7,3 +7,9 @@ class LegalUser(BaseModel):
     type_activity: str
     contact_person: str
     address: str
+
+class LegalUserLoginInn(BaseModel):
+    inn: int
+
+class LegalUserLogin(BaseModel):
+    token: str
